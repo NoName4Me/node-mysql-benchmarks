@@ -17,7 +17,7 @@ module.exports = function(cb) {
         db: cfg.database
       });
 
-      conn.once('connect', function() {
+      conn.once('ready', function() {
         if (clearTable) {
           conn.query('DROP TABLE IF EXISTS ' + cfg.test_table)
               .on('error', function(err) {

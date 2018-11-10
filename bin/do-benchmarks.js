@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // syntax: do-benchmark [factor] [module filter]
-var fs = require('fs'), cp = require('child_process'), path = require('path');
+var fs = require('fs'), cp = require('child_process'), path = require('path'), nodeVersion = require('node-version');
 
 var DEFAULT_FACTOR = 6;
 
@@ -9,14 +9,12 @@ var factor,
     module_filter,
     results = {},
     modules = [
-      'C',
-      'PHP',
       'mysql',
       'mysql2',
-      'mysql-libmysqlclient',
-      'mysql-native',
-      'mariasql',
     ];
+
+if (true) modules.push('mariasql');
+if (process.env.BENCH_C) modules.push('C');
 
 factor = DEFAULT_FACTOR;
 
@@ -40,7 +38,7 @@ function printResults() {
   console.log('\n\u001B[1mResults (init time in seconds, other values in ops/s):\u001B[22m');
 
   console.log(header);
-  var separator = new Buffer(header.length);
+  var separator = Buffer.alloc(header.length);
   separator.fill('='.charCodeAt(0));
   console.log(separator.toString());
 

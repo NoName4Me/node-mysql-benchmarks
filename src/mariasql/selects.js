@@ -14,7 +14,7 @@ require('./_common')(function(env) {
           r.on('error', function(err) {
             console.error(err);
           })
-          .on('row', function(row) {
+          .on('data', function(row) {
             rows.push(row);
           })
           .on('end', function() {

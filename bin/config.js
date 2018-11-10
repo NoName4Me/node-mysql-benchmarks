@@ -10,9 +10,9 @@ exports.getConfig = function(factor) {
   var cfg = {
     // Database connection settings
     host: "127.0.0.1",
-    port: 3307,
+    port: 3306,
     user: "root",
-    password: "root",
+    password: "",
     database: "test",
     test_table: "test_table",
 
@@ -44,4 +44,3 @@ exports.getConfig = function(factor) {
 
   return cfg;
 };
-
