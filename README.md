@@ -45,7 +45,6 @@ running Ubuntu 18.04 Linux version 4.15.0-38-generic (buildd@lcy01-amd64-023) (g
 ## Node v6.14.4
 Results (init time in seconds, other values in ops/s):
 module,init,escapes,inserts,selects
-===================================
 mysql,0.1,1310616,10162,139587
 mysql2,0.05,1324796,10572,453721
 mariasql,0.016,3267974,14377,369276
@@ -54,7 +53,6 @@ C,0.021,14043924,20837,1095740
 ## Node v8.12.0
 Results (init time in seconds, other values in ops/s):
 module,init,escapes,inserts,selects
-===================================
 mysql,0.082,1664817,10416,289519
 mysql2,0.029,1630878,11370,625782
 mariasql,0.024,3086420,14977,406504
@@ -63,7 +61,6 @@ C,0.016,14474160,20985,1052153
 ## Node v.10.13.0
 Results (init time in seconds, other values in ops/s):
 module,init,escapes,inserts,selects
-===================================
 mysql,0.086,1805597,10580,291545
 mysql2,0.04,1858736,13113,871080
 mariasql,0.016,2862595,15343,412201
