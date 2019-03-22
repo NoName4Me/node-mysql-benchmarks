@@ -38,8 +38,6 @@ yarn test
 
 * 输出结果
 
-![](./static/2019-03-22-17-57-36.png)
-
 module|init(s)|escapes(ops/s)|inserts(ops/s)|selects(ops/s)
 --|--|--|--|--
 mysql|0.399|243, 0134|10, 152|270, 270
