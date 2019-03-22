@@ -1,5 +1,4 @@
-.gitignore
 node_modules
-src/C/build/*
-src/C/bin/*
-package-lock.json
+yarn.lock
+tmp
+.DS_Store

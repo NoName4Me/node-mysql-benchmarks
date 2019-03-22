@@ -1,67 +1,57 @@
-Benchmarks for MySQL modules for Node.js
-=========================================
-
-Clone the git repository and run:
-
-    npm install
-
-Then run:
-
-    npm test
+# Node.js MySQL 模块性能测试
 
 
-You will also need to make sure that `max_heap_table_size=4294967295` is set in your server configuration.
+对比模块：
 
-When using Node <=8 mariasql will be tested.
-
-To test C client run:
-
-    BENCH_C=1 npm test
-
-Default MySQL Config
---------------------
-
-    host: 127.0.0.1
-    port: 3306
-    user: root
-    pass: ""
-
-Supported MySQL modules
------------------------
-
-* [mariasql](https://github.com/mscdex/node-mariasql)
 * [mysql](https://github.com/felixge/node-mysql)
 * [mysql2](https://github.com/sidorares/node-mysql2)
 
+**注意**：因为测试时使用的是内存表，建议修改 mysql 配置。
 
-Benchmark results (2018-11-10)
-------------------------------
+```bash
+# my.cnf
+tmp_table_size = 256M
+max_heap_table_size = 256M
+```
 
-Full write up @ [Node.js MySQL Driver Benchmarks 2018](https://medium.com/epycly/node-js-mysql-driver-benchmarks-2018-86579c402016)
+## 使用
 
-All benchmarks were conducted on a Gigabyte Aero 15x with an Intel i7-8750H CPU @ 2.20GHz (turbo disabled)
-running Ubuntu 18.04 Linux version 4.15.0-38-generic (buildd@lcy01-amd64-023) (gcc version 7.3.0 (Ubuntu 7.3.0-16ubuntu3)).
+* 配置 MySQL 链接信息
 
-## Node v6.14.4
-Results (init time in seconds, other values in ops/s):
-module,init,escapes,inserts,selects
-mysql,0.1,1310616,10162,139587
-mysql2,0.05,1324796,10572,453721
-mariasql,0.016,3267974,14377,369276
-C,0.021,14043924,20837,1095740
+```js
+// ./bin/config.js
+host: '127.0.0.1',
+port: 3306,
+user: 'root',
+password: '',
+database: 'test',
+test_table: 'test_table',
+```
 
-## Node v8.12.0
-Results (init time in seconds, other values in ops/s):
-module,init,escapes,inserts,selects
-mysql,0.082,1664817,10416,289519
-mysql2,0.029,1630878,11370,625782
-mariasql,0.024,3086420,14977,406504
-C,0.016,14474160,20985,1052153
+* 启动测试
 
-## Node v.10.13.0
-Results (init time in seconds, other values in ops/s):
-module,init,escapes,inserts,selects
-mysql,0.086,1805597,10580,291545
-mysql2,0.04,1858736,13113,871080
-mariasql,0.016,2862595,15343,412201
-C,0.029,14099476,20596,1094857
+```bash
+yarn
+
+yarn test
+```
+
+* 输出结果
+
+![](./static/2019-03-22-17-57-36.png)
+
+module|init(s)|escapes(ops/s)|inserts(ops/s)|selects(ops/s)
+--|--|--|--|--
+mysql|0.399|243, 0134|10, 152|270, 270
+mysql2|0.167|256, 0819|11, 291|639, 386
+
+可以看到 mysql2 的性能在 select 上是 mysql 的 2 倍多。
+
+* 测试环境
+
+node|MySQL|mysql|mysql2
+--|--|--|--
+v8.15.0|5.7.22|2.16.0|1.6.5
+
+os: macOS 64 10.14(18A391), 2.3 GHz Intel Core i5, 8 GB 2133 MHz LPDDR3
+

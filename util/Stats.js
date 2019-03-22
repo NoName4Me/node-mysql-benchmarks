@@ -5,7 +5,7 @@ function Stats(pid, interval) {
   this.buffer = '';
   this.timer = setInterval(function() {
     var proc = cp.spawn('ps', ['-o', '%cpu,%mem', '--no-headers', pid]);
-    proc.setEncoding('ascii');
+    // proc.setEncoding('ascii');
     proc.stdout.on('data', function(data) {
       self.buffer += data;
     });

@@ -1,75 +1,72 @@
 #!/usr/bin/env node
 // syntax: do-benchmark [factor] [module filter]
-var fs = require('fs'), cp = require('child_process'), path = require('path'), nodeVersion = require('node-version');
+let fs = require('fs'),
+  cp = require('child_process'),
+  path = require('path');
 
-var DEFAULT_FACTOR = 6;
+const DEFAULT_FACTOR = 6;
 
-var factor,
-    cfg,
-    module_filter,
-    results = {},
-    modules = [
-      'mysql',
-      'mysql2',
-    ];
-
-if (true) modules.push('mariasql');
-if (process.env.BENCH_C) modules.push('C');
+let factor,
+  cfg,
+  results = {},
+  modules = ['mysql', 'mysql2'];
 
 factor = DEFAULT_FACTOR;
 
 if (process.argv[2] !== undefined) {
-  if (/^\d+$/.test(process.argv[2]))
+  if (/^\d+$/.test(process.argv[2])) {
     factor = parseInt(process.argv[2], 10);
-  else
-    module_filter = process.argv[2];
-} else if (process.argv[3] !== undefined)
-  module_filter = process.argv[3];
-
-if (module_filter)
-  modules = modules.filter(function(v) { return v.match(module_filter); });
+  }
+}
 
 cfg = require('./config').getConfig(factor);
 
 function printResults() {
-  var header = ['module'].concat(tests).join(','),
-      name;
+  let header = ['module'].concat(tests).join('\t'),
+    name;
 
-  console.log('\n\u001B[1mResults (init time in seconds, other values in ops/s):\u001B[22m');
+  console.log(
+    '\n\u001B[1mResults (init time in seconds, other values in ops/s):\u001B[22m'
+  );
 
   console.log(header);
-  var separator = Buffer.alloc(header.length);
+  let separator = Buffer.alloc(header.length);
   separator.fill('='.charCodeAt(0));
   console.log(separator.toString());
 
   for (name in results) {
     process.stdout.write(name);
     tests.forEach(function(t) {
-      process.stdout.write(',' + (results[name][t] || 0));
+      process.stdout.write('\t' + (results[name][t] || 0));
     });
     process.stdout.write('\n');
   }
 }
 
-var tests = ['init', 'escapes', /*'reconnects',*/ 'inserts', 'selects'];
+let tests = ['init', 'escapes', 'inserts', 'selects'];
 
 function runNextBenchmark() {
   if (modules.length) {
-    var module_name = modules.shift(),
-        benchmark = require('../src/' + module_name + '/_main');
+    let module_name = modules.shift(),
+      benchmark = require('../src/' + module_name + '/_main');
 
     console.log('Benchmarking ' + module_name + '...');
 
-    var t = 0;
+    let t = 0;
     results[module_name] = {};
 
     function runNextTest() {
       console.log(' - starting "' + tests[t] + '" test ...');
       benchmark.run(cfg, tests[t], function(val, csv) {
-        results[module_name][tests[t]] = (typeof val === 'number' ? val : 0);
+        results[module_name][tests[t]] = typeof val === 'number' ? val : 0;
         if (cfg.global.more_stats) {
-          fs.writeFileSync(path.resolve(cfg.global.stat_dir, module_name + '.'
-                                        + tests[t] + '.csv'), csv);
+          fs.writeFileSync(
+            path.resolve(
+              cfg.global.stat_dir,
+              module_name + '.' + tests[t] + '.csv'
+            ),
+            csv
+          );
         }
 
         console.log(' - finished "' + tests[t] + '" test');
@@ -79,12 +76,10 @@ function runNextBenchmark() {
           if (modules.length) {
             console.log('Cooling down ...');
             setTimeout(runNextBenchmark, cfg.global.cooldown);
-          } else
-            runNextBenchmark();
+          } else runNextBenchmark();
         } else if (tests[t] === 'selects')
           setTimeout(runNextTest, cfg.global.delay_before_select);
-        else
-          runNextTest();
+        else runNextTest();
       });
     }
 
@@ -97,15 +92,18 @@ function runNextBenchmark() {
 
 if (cfg.global.more_stats) {
   if (fs.existsSync(cfg.global.stat_dir)) {
-    cp.exec('rm -f ' + cfg.global.stat_dir + '/*', function(err, stdout, stderr) {
+    cp.exec('rm -f ' + cfg.global.stat_dir + '/*', function(
+      err,
+      stdout,
+      stderr
+    ) {
       startBenchmarks();
     });
   } else {
     fs.mkdirSync(cfg.global.stat_dir);
     startBenchmarks();
   }
-} else
-  startBenchmarks();
+} else startBenchmarks();
 
 function startBenchmarks() {
   console.log('\u001B[1mBenchmarking...\u001B[22m');

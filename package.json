@@ -3,10 +3,8 @@
   "description": "Node.js MySQL module benchmarks",
   "keywords": [
     "mysql",
-    "sql",
-    "database",
     "benchmarks",
-    "rdbs"
+    "mysql2"
   ],
   "version": "0.0.1",
   "author": {
@@ -23,16 +21,14 @@
   },
   "bin": "./bin/do-benchmarks.js",
   "scripts": {
-    "install": "/usr/bin/env node src/C/_build.js",
-    "test": "/usr/bin/env node bin/do-benchmarks.js"
+    "test": "node bin/do-benchmarks.js"
   },
   "engines": {
     "node": ">=0.8.0"
   },
   "dependencies": {
-    "mariasql": "^0.2.6",
     "mysql": "^2.16.0",
-    "mysql2": "^1.6.4",
+    "mysql2": "^1.6.5",
     "node-version": "^1.2.0"
   }
 }
