@@ -6,7 +6,7 @@
 * [mysql](https://github.com/felixge/node-mysql)
 * [mysql2](https://github.com/sidorares/node-mysql2)
 
-**注意**：因为测试时使用的是内存表，建议修改 mysql 配置。
+**注意**：因为测试时使用的是内存表，建议修改 mysql 配置适当增大内存表大小上限。
 
 ```bash
 # my.cnf
